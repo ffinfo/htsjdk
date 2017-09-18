@@ -29,27 +29,43 @@ package htsjdk.tribble.annotation;
 public enum Strand {
 
     /**
-     * Represent the positive or forward strand.
+     * Represents the positive or forward strand.
      */
     POSITIVE('+'),
+
     /**
-     * Represent the negative or reverse strand.
+     * Represents the negative or reverse strand.
      */
     NEGATIVE('-'),
 
     /**
-     * Denotes that an strand designation is not applicable
+     * Denotes that a strand designation is not applicable
      * or is unknown.
      */
     NONE('!');  // not really sure what we should do for the NONE Enum
 
     /**
-     * How we represent the strand information as a single {@code char}.
+     * Common alias for the {@link #POSITIVE} strand.
+     */
+    public static final Strand FORWARD = POSITIVE;
+
+    /**
+     * Common alias for the {@link #NEGATIVE} strand.
+     */
+    public static final Strand REVERSE = NEGATIVE;
+
+    /**
+     * Cached array of instances.
+     */
+    private final static Strand[] VALUES = values();
+
+    /**
+     * How we represent the strand as a single {@code char}.
      */
     private final char charEncoding;
 
     /**
-     * How we represent the strand information as a {@link String}.
+     * How we represent the strand as a {@link String}.
      */
     private final String stringEncoding;
 
@@ -77,14 +93,12 @@ public enum Strand {
      * @return never {@code null}, a value so that {@code decode(c).encodeAsChar() == c}.
      */
     public static Strand decode(final char ch) {
-        switch (ch) {
-            case '+': return POSITIVE;
-            case '-': return NEGATIVE;
-            case '!': return NONE;
-            default:
-                throw new IllegalArgumentException(
-                        "Unable to match encoding to Strand enum for encoding char: " + ch);
+        for(final Strand value : VALUES) {
+            if (value.charEncoding == ch) {
+                return value;
+            }
         }
+        throw new IllegalArgumentException("Unable to match encoding to Strand enum for encoding char: " + ch);
     }
 
     /**

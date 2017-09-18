@@ -1,11 +1,11 @@
 package htsjdk.tribble.annotation;
 
+import htsjdk.HtsjdkTest;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 /**
@@ -14,7 +14,7 @@ import java.util.stream.Stream;
  *     Makes sure that {@link Strand} will behave according to contract in run-time.
  * </p>
  */
-public class StrandTest {
+public class StrandTest extends HtsjdkTest {
 
     @Test
     public void testEncodeReturnNoNulls() {
@@ -64,6 +64,12 @@ public class StrandTest {
         }
     }
 
+    @Test
+    public void testAliases() {
+        Assert.assertEquals(Strand.FORWARD, Strand.POSITIVE);
+        Assert.assertEquals(Strand.REVERSE, Strand.NEGATIVE);
+    }
+
     @Test(dataProvider = "invalidEncodingStringsData", expectedExceptions = IllegalArgumentException.class)
     public void testDecodeOfInvalidEncodingStrings(final String encoding) {
         Strand.decode(encoding);
@@ -85,9 +91,8 @@ public class StrandTest {
 
     @DataProvider(name = "invalidEncodingCharsData")
     public Object[][] invalidEncodingCharsData() {
-        final char[] testCases = new char[] {'c', '\t', '\n', (char) -1, 'p', 'n', 'x' };
-        return IntStream.range(0, testCases.length)
-                .mapToObj(i -> testCases[i])
+        final Character[] testCases = new Character[] {(char) 0, 'c', '\t', '\n', (char) -1, 'p', 'n', 'x' };
+        return Stream.of(testCases)
                 .map(c -> new Object[] { c })
                 .toArray(Object[][]::new);
     }
