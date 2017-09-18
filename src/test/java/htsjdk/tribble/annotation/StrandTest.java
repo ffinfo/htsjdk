@@ -70,6 +70,20 @@ public class StrandTest extends HtsjdkTest {
         Assert.assertEquals(Strand.REVERSE, Strand.NEGATIVE);
     }
 
+    @Test
+    public void testToStrandMatchesDecode() {
+        for (final Strand value : Strand.values()) {
+            Assert.assertSame(Strand.toStrand(value.encode()), Strand.decode(value.encode()));
+        }
+    }
+
+    @Test
+    public void testToStringMatchesEncode() {
+        for (final Strand value : Strand.values()) {
+            Assert.assertEquals(value.toString(), value.encode());
+        }
+    }
+
     @Test(dataProvider = "invalidEncodingStringsData", expectedExceptions = IllegalArgumentException.class)
     public void testDecodeOfInvalidEncodingStrings(final String encoding) {
         Strand.decode(encoding);
